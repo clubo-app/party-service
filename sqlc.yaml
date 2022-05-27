@@ -1,0 +1,15 @@
+version: 1
+packages:
+  - name: "repository"
+    path: "./repository"
+    queries: "./repository/queries"
+    schema: "./repository/migrations"
+    engine: "postgresql"
+    sql_package: "pgx/v4"
+    emit_json_tags: false
+    emit_prepared_queries: false
+    emit_interface: true
+    emit_exact_table_names: false
+overrides:
+  - db_type: "geometry"
+    go_type: "github.com/twpayne/go-geom.Point"
