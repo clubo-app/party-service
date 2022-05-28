@@ -2,18 +2,16 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"log"
 	"net/url"
 
-	"github.com/clubo-app/party-service/repository/migrations"
-	migrate "github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
-	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/pgx"
+	g "github.com/golang-migrate/migrate/v4/source/github"
+
 	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/jackc/pgx/v4/stdlib"
 )
 
 func NewPGXPool(dbUser, dbPW, dbName, dbHost string, dbPort uint16) (*pgxpool.Pool, error) {
@@ -39,10 +37,7 @@ func NewPGXPool(dbUser, dbPW, dbName, dbHost string, dbPort uint16) (*pgxpool.Po
 		return nil, fmt.Errorf("pgx connection error: %w", err)
 	}
 
-	db := stdlib.OpenDB(*c.ConnConfig)
-	defer db.Close()
-
-	err = validateSchema(db)
+	err = validateSchema(connURL)
 	if err != nil {
 		log.Printf("Schema validation error: %v", err)
 	}
@@ -52,17 +47,18 @@ func NewPGXPool(dbUser, dbPW, dbName, dbHost string, dbPort uint16) (*pgxpool.Po
 
 const version = 1
 
-func validateSchema(db *sql.DB) error {
-	sourceInstance, err := bindata.WithInstance(bindata.Resource(migrations.AssetNames(), migrations.Asset))
+func validateSchema(url url.URL) error {
+	url.Scheme = "pgx"
+	url2 := fmt.Sprintf("%v%v", url.String(), "?sslmode=disable")
+	g := g.Github{}
+	d, err := g.Open("github://clubo-app/party-service/repository/migrations")
 	if err != nil {
 		return err
 	}
+	defer d.Close()
 
-	targetInstance, err := postgres.WithInstance(db, new(postgres.Config))
-	if err != nil {
-		return err
-	}
-	m, err := migrate.NewWithInstance("go-bindata", sourceInstance, "postgres", targetInstance)
+	m, err := migrate.NewWithSourceInstance("github", d, url2)
+
 	if err != nil {
 		return err
 	}
@@ -70,5 +66,6 @@ func validateSchema(db *sql.DB) error {
 	if err != nil && err != migrate.ErrNoChange {
 		return err
 	}
-	return sourceInstance.Close()
+	defer m.Close()
+	return nil
 }
