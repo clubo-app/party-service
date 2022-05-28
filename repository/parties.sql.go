@@ -8,6 +8,8 @@ package repository
 import (
 	"context"
 	"database/sql"
+
+	"github.com/cridenour/go-postgis"
 )
 
 const createParty = `-- name: CreateParty :one
@@ -24,7 +26,8 @@ INSERT INTO parties (
   start_date,
   end_date
 ) VALUES (
-  $1, $2, $3, $4, ST_GeomFromWKB($5), $6, $7, $8, $9, $10, $11
+  $1, $2, $3, $4, ST_GeomFromEWKB($5::geometry), 
+  $6, $7, $8, $9, $10, $11
 )
 RETURNING id, user_id, title, is_public, location, street_address, postal_code, state, country, start_date, end_date
 `
@@ -34,7 +37,7 @@ type CreatePartyParams struct {
 	UserID        string
 	Title         string
 	IsPublic      bool
-	StGeomfromwkb interface{}
+	Location      postgis.Point
 	StreetAddress sql.NullString
 	PostalCode    sql.NullString
 	State         sql.NullString
@@ -49,7 +52,7 @@ func (q *Queries) CreateParty(ctx context.Context, arg CreatePartyParams) (Party
 		arg.UserID,
 		arg.Title,
 		arg.IsPublic,
-		arg.StGeomfromwkb,
+		arg.Location,
 		arg.StreetAddress,
 		arg.PostalCode,
 		arg.State,

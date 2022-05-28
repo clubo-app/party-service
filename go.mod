@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/clubo-app/packages v0.0.0-20220527175458-6c8e7d7935c9
 	github.com/clubo-app/protobuf v0.0.0-20220527194713-edc207a1d44f
+	github.com/cridenour/go-postgis v1.0.0
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/jackc/pgconn v1.12.1
@@ -13,7 +14,6 @@ require (
 	github.com/scylladb/gocqlx/v2 v2.7.0
 	github.com/segmentio/ksuid v1.0.4
 	github.com/spf13/viper v1.12.0
-	github.com/twpayne/go-geom v1.4.1
 	google.golang.org/grpc v1.46.2
 )
 

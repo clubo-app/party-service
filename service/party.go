@@ -32,7 +32,7 @@ func (s partyService) Create(ctx context.Context, p dto.Party) (res repository.P
 		UserID:        p.UserId,
 		Title:         p.Title,
 		IsPublic:      p.IsPublic,
-		StGeomfromwkb: p.Location,
+		Location:      p.Location,
 		StreetAddress: sql.NullString{String: p.StreetAddress, Valid: p.StreetAddress != ""},
 		PostalCode:    sql.NullString{String: p.PostalCode, Valid: p.PostalCode != ""},
 		State:         sql.NullString{String: p.State, Valid: p.State != ""},

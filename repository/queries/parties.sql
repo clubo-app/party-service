@@ -12,7 +12,8 @@ INSERT INTO parties (
   start_date,
   end_date
 ) VALUES (
-  $1, $2, $3, $4, ST_GeomFromWKB($5), $6, $7, $8, $9, $10, $11
+  sqlc.arg('id'), sqlc.arg('user_id'), sqlc.arg('title'), sqlc.arg('is_public'), ST_GeomFromEWKB(sqlc.arg('location')::geometry), 
+  sqlc.arg('street_address'), sqlc.arg('postal_code'), sqlc.arg('state'), sqlc.arg('country'), sqlc.arg('start_date'), sqlc.arg('end_date')
 )
 RETURNING *;
 

@@ -7,7 +7,7 @@ package repository
 import (
 	"database/sql"
 
-	"github.com/twpayne/go-geom"
+	"github.com/cridenour/go-postgis"
 )
 
 type Party struct {
@@ -15,7 +15,7 @@ type Party struct {
 	UserID        string
 	Title         string
 	IsPublic      bool
-	Location      geom.Point
+	Location      postgis.Point
 	StreetAddress sql.NullString
 	PostalCode    sql.NullString
 	State         sql.NullString
