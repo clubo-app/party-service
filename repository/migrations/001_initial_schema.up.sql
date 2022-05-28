@@ -1,5 +1,3 @@
-CREATE EXTENSION postgis;
-
 CREATE TABLE parties (
     id char(27) PRIMARY KEY,
     user_id TEXT NOT NULL,
