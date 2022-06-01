@@ -2,7 +2,6 @@ package rpc
 
 import (
 	"context"
-	"time"
 
 	"github.com/clubo-app/packages/utils"
 	"github.com/clubo-app/party-service/dto"
@@ -14,15 +13,8 @@ import (
 )
 
 func (s partyServer) UpdateParty(c context.Context, req *pg.UpdatePartyRequest) (*pg.Party, error) {
-	start, err := time.Parse(time.RFC3339, req.StartDate)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "Invalid start date")
-	}
-
-	end, err := time.Parse(time.RFC3339, req.EndDate)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "Invalid end date")
-	}
+	start := req.StartDate.AsTime()
+	end := req.EndDate.AsTime()
 
 	id, err := ksuid.Parse(req.PartyId)
 	if err != nil {

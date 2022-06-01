@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/clubo-app/packages v0.0.0-20220527175458-6c8e7d7935c9
-	github.com/clubo-app/protobuf v0.0.0-20220527194713-edc207a1d44f
+	github.com/clubo-app/protobuf v0.0.0-20220601172316-8dde70f4bcaa
 	github.com/cridenour/go-postgis v1.0.0
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/jackc/pgconn v1.12.1
@@ -13,6 +13,7 @@ require (
 	github.com/segmentio/ksuid v1.0.4
 	github.com/spf13/viper v1.12.0
 	google.golang.org/grpc v1.46.2
+	google.golang.org/protobuf v1.28.0
 )
 
 require (
@@ -67,7 +68,6 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220527130721-00d5c0f3be58 // indirect
-	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
