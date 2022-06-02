@@ -2,8 +2,6 @@ package dto
 
 import (
 	"time"
-
-	"github.com/cridenour/go-postgis"
 )
 
 type Party struct {
@@ -11,7 +9,8 @@ type Party struct {
 	UserId        string
 	Title         string
 	IsPublic      bool
-	Location      postgis.Point
+	Lat           float32
+	Long          float32
 	StreetAddress string
 	PostalCode    string
 	State         string

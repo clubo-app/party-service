@@ -7,7 +7,7 @@ package repository
 import (
 	"database/sql"
 
-	"github.com/cridenour/go-postgis"
+	"github.com/paulmach/orb"
 )
 
 type Party struct {
@@ -15,7 +15,7 @@ type Party struct {
 	UserID        string
 	Title         string
 	IsPublic      bool
-	Location      postgis.Point
+	Location      orb.Point
 	StreetAddress sql.NullString
 	PostalCode    sql.NullString
 	State         sql.NullString

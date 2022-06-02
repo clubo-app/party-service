@@ -9,13 +9,7 @@ import (
 )
 
 type Querier interface {
-	CreateParty(ctx context.Context, arg CreatePartyParams) (Party, error)
-	DeleteParty(ctx context.Context, arg DeletePartyParams) (Party, error)
-	GetManyParties(ctx context.Context, arg GetManyPartiesParams) ([]Party, error)
-	GetPartiesByUser(ctx context.Context, arg GetPartiesByUserParams) ([]Party, error)
-	GetPartiesInRadius(ctx context.Context, arg GetPartiesInRadiusParams) ([]Party, error)
-	GetParty(ctx context.Context, id string) (Party, error)
-	UpdateParty(ctx context.Context, arg UpdatePartyParams) (Party, error)
+	DeleteParty(ctx context.Context, arg DeletePartyParams) error
 }
 
 var _ Querier = (*Queries)(nil)

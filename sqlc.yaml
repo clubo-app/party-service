@@ -12,4 +12,4 @@ packages:
     emit_exact_table_names: false
 overrides:
   - db_type: "geometry"
-    go_type: "github.com/cridenour/go-postgis.Point"
+    go_type: "github.com/paulmach/orb.Point"

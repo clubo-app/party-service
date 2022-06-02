@@ -5,12 +5,13 @@ go 1.18
 require (
 	github.com/clubo-app/packages v0.0.0-20220527175458-6c8e7d7935c9
 	github.com/clubo-app/protobuf v0.0.0-20220601172316-8dde70f4bcaa
-	github.com/cridenour/go-postgis v1.0.0
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/jackc/pgconn v1.12.1
 	github.com/jackc/pgx/v4 v4.16.1
 	github.com/nats-io/nats.go v1.16.0
+	github.com/paulmach/orb v0.7.1
 	github.com/segmentio/ksuid v1.0.4
+	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.12.0
 	google.golang.org/grpc v1.46.2
 	google.golang.org/protobuf v1.28.0

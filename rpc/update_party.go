@@ -6,7 +6,6 @@ import (
 	"github.com/clubo-app/packages/utils"
 	"github.com/clubo-app/party-service/dto"
 	pg "github.com/clubo-app/protobuf/party"
-	"github.com/cridenour/go-postgis"
 	"github.com/segmentio/ksuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -25,7 +24,8 @@ func (s partyServer) UpdateParty(c context.Context, req *pg.UpdatePartyRequest) 
 		ID:            id.String(),
 		UserId:        req.RequesterId,
 		Title:         req.Title,
-		Location:      postgis.Point{X: float64(req.Lat), Y: float64(req.Long)},
+		Lat:           req.Lat,
+		Long:          req.Long,
 		StreetAddress: req.StreetAddress,
 		PostalCode:    req.PostalCode,
 		State:         req.State,

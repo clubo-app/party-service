@@ -7,7 +7,6 @@ import (
 	"github.com/clubo-app/packages/utils"
 	"github.com/clubo-app/party-service/dto"
 	pg "github.com/clubo-app/protobuf/party"
-	"github.com/cridenour/go-postgis"
 )
 
 func (s partyServer) CreateParty(c context.Context, req *pg.CreatePartyRequest) (*pg.Party, error) {
@@ -17,7 +16,8 @@ func (s partyServer) CreateParty(c context.Context, req *pg.CreatePartyRequest) 
 	d := dto.Party{
 		Title:         req.Title,
 		UserId:        req.RequesterId,
-		Location:      postgis.Point{X: float64(req.Lat), Y: float64(req.Long)},
+		Lat:           req.Lat,
+		Long:          req.Long,
 		IsPublic:      req.IsPublic,
 		StreetAddress: req.StreetAddress,
 		PostalCode:    req.PostalCode,

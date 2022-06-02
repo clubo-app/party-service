@@ -3,7 +3,7 @@ CREATE TABLE parties (
     user_id TEXT NOT NULL,
     title TEXT NOT NULL,
     is_public BOOLEAN NOT NULL DEFAULT false,
-    location geometry(POINT) NOT NULL,
+    location geometry(POINT, 4326) NOT NULL,
     street_address TEXT,
     postal_code TEXT,
     state TEXT,

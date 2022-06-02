@@ -22,7 +22,7 @@ func (s partyServer) DeleteParty(c context.Context, req *pg.DeletePartyRequest) 
 		return nil, status.Error(codes.InvalidArgument, "Invalid Requester id")
 	}
 
-	_, err = s.ps.Delete(c, req.RequesterId, req.PartyId)
+	err = s.ps.Delete(c, req.RequesterId, req.PartyId)
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}

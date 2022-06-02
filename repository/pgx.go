@@ -10,7 +10,6 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/pgx"
 	g "github.com/golang-migrate/migrate/v4/source/github"
 
-	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
@@ -30,7 +29,6 @@ func NewPGXPool(dbUser, dbPW, dbName, dbHost string, dbPort uint16) (*pgxpool.Po
 	if err != nil {
 		return nil, err
 	}
-	c.ConnConfig.LogLevel = pgx.LogLevelDebug
 
 	pool, err := pgxpool.ConnectConfig(context.Background(), c)
 	if err != nil {
