@@ -1,5 +1,5 @@
 CREATE TABLE parties (
-    id char(27) PRIMARY KEY,
+    id varchar(27) PRIMARY KEY,
     user_id TEXT NOT NULL,
     title TEXT NOT NULL,
     is_public BOOLEAN NOT NULL DEFAULT false,
