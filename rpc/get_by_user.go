@@ -8,7 +8,7 @@ import (
 )
 
 func (s partyServer) GetByUser(c context.Context, req *pg.GetByUserRequest) (*pg.PagedParties, error) {
-	ps, err := s.ps.GetByUser(c, req.UserId, int32(req.Limit), int32(req.Offset))
+	ps, err := s.ps.GetByUser(c, req.UserId, uint64(req.Limit), uint64(req.Offset))
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}

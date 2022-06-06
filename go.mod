@@ -8,10 +8,10 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/jackc/pgconn v1.12.1
 	github.com/jackc/pgx/v4 v4.16.1
+	github.com/leporo/sqlf v1.3.0
 	github.com/nats-io/nats.go v1.16.0
 	github.com/paulmach/orb v0.7.1
 	github.com/segmentio/ksuid v1.0.4
-	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.12.0
 	google.golang.org/grpc v1.46.2
 	google.golang.org/protobuf v1.28.0

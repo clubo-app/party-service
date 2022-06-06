@@ -25,15 +25,13 @@ func main() {
 	defer nc.Close()
 	stream := stream.New(nc)
 
-	pool, err := repository.NewPGXPool(c.DB_USER, c.DB_PW, c.DB_NAME, c.DB_HOST, c.DB_PORT)
+	d, err := repository.NewPartyRepository(c.DB_USER, c.DB_PW, c.DB_NAME, c.DB_HOST, c.DB_PORT)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer pool.Close()
+	defer d.Close()
 
-	q := repository.New(pool)
-
-	s := service.NewPartyService(q)
+	s := service.NewPartyService(d)
 
 	p := rpc.NewPartyServer(s, stream)
 	rpc.Start(p, c.PORT)
