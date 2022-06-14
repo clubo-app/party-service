@@ -73,10 +73,7 @@ type CreatePartyParams struct {
 	EndDate       time.Time
 }
 
-const returnStmt = "RETURNING id, user_id, title, is_public, ST_AsBinary(location) AS location, street_address, postal_code, state, country, start_date, end_date"
 const selectStmt = "id, user_id, title, is_public, ST_AsBinary(location) AS location, street_address, postal_code, state, country, start_date, end_date"
-
-var columnStmt = []string{"id", "user_id", "title", "is_public", "location", "street_address", "postal_code", "state", "country", "start_date", "end_date"}
 
 func (r PartyRepository) CreateParty(ctx context.Context, arg CreatePartyParams) (Party, error) {
 	sqlf.SetDialect(sqlf.PostgreSQL)
@@ -217,8 +214,7 @@ func (r PartyRepository) GetManyParties(ctx context.Context, arg GetManyPartiesP
 	b := sqlf.
 		Select(selectStmt).
 		From(TABLE_NAME).
-		Where("id").
-		In(arg.Ids).
+		Where("id = ANY(?)", arg.Ids).
 		Limit(arg.Limit)
 
 	rows, err := r.pool.Query(ctx, b.String(), b.Args()...)
