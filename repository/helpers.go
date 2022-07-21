@@ -1,13 +1,14 @@
 package repository
 
 import (
+	"embed"
 	"fmt"
 	"net/url"
 
 	pg "github.com/clubo-app/protobuf/party"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/pgx"
-	g "github.com/golang-migrate/migrate/v4/source/github"
+	"github.com/golang-migrate/migrate/v4/source/iofs"
 	"github.com/segmentio/ksuid"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -23,8 +24,8 @@ func (p Party) ToGRPCParty() *pg.Party {
 		UserId:        p.UserID,
 		Title:         p.Title,
 		IsPublic:      p.IsPublic,
-		Lat:           float32(p.Location.X()),
-		Long:          float32(p.Location.Y()),
+		Lat:           float32(p.Location.Lat()),
+		Long:          float32(p.Location.Lon()),
 		StreetAddress: p.StreetAddress.String,
 		PostalCode:    p.PostalCode.String,
 		State:         p.State.String,
@@ -37,21 +38,23 @@ func (p Party) ToGRPCParty() *pg.Party {
 
 const version = 1
 
+//go:embed migrations/*.sql
+var fs embed.FS
+
 func validateSchema(url url.URL) error {
 	url.Scheme = "pgx"
-	url2 := fmt.Sprintf("%v%v", url.String(), "?sslmode=disable")
-	g := g.Github{}
-	d, err := g.Open("github://clubo-app/party-service/repository/migrations")
+	urlf := fmt.Sprintf("%v%v", url.String(), "?sslmode=disable")
+
+	d, err := iofs.New(fs, "migrations")
 	if err != nil {
 		return err
 	}
-	defer d.Close()
 
-	m, err := migrate.NewWithSourceInstance("github", d, url2)
-
+	m, err := migrate.NewWithSourceInstance("iofs", d, urlf)
 	if err != nil {
 		return err
 	}
+
 	err = m.Migrate(version) // current version
 	if err != nil && err != migrate.ErrNoChange {
 		return err

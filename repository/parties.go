@@ -9,6 +9,8 @@ import (
 
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/leporo/sqlf"
+	"github.com/paulmach/orb"
+	"github.com/paulmach/orb/encoding/ewkb"
 	"github.com/paulmach/orb/encoding/wkb"
 )
 
@@ -63,8 +65,7 @@ type CreatePartyParams struct {
 	UserID        string
 	Title         string
 	IsPublic      bool
-	Lat           float32
-	Long          float32
+	Location      orb.Point
 	StreetAddress string
 	PostalCode    string
 	State         string
@@ -83,7 +84,7 @@ func (r PartyRepository) CreateParty(ctx context.Context, arg CreatePartyParams)
 		Set("user_id", arg.UserID).
 		Set("title", arg.Title).
 		Set("is_public", arg.IsPublic).
-		SetExpr("location", "ST_SetSRID(ST_MakePoint(?, ?), 4326)", arg.Long, arg.Lat).
+		SetExpr("location", "ST_GeomFromEWKB(?)", ewkb.Value(arg.Location, 4326)).
 		Set("street_address", arg.StreetAddress).
 		Set("postal_code", arg.PostalCode).
 		Set("state", arg.State).
@@ -113,8 +114,7 @@ func (r PartyRepository) CreateParty(ctx context.Context, arg CreatePartyParams)
 type UpdatePartyParams struct {
 	ID            string
 	Title         string
-	Lat           float32
-	Long          float32
+	Location      orb.Point
 	StreetAddress string
 	PostalCode    string
 	State         string
@@ -130,8 +130,8 @@ func (r PartyRepository) UpdateParty(ctx context.Context, arg UpdatePartyParams)
 	if arg.Title != "" {
 		b = b.Set("title", arg.Title)
 	}
-	if arg.Lat != 0 && arg.Long != 0 {
-		b = b.SetExpr("location", "ST_SetSRID(ST_MakePoint(?, ?), 4326)", arg.Long, arg.Lat)
+	if arg.Location.Lat() != 0 && arg.Location.Lon() != 0 {
+		b = b.SetExpr("location", "ST_GeomFromEWKB(?)", ewkb.Value(arg.Location, 4326))
 	}
 	if arg.StreetAddress != "" {
 		b = b.Set("street_address", arg.StreetAddress)
@@ -157,8 +157,6 @@ func (r PartyRepository) UpdateParty(ctx context.Context, arg UpdatePartyParams)
 	b.
 		Where("id = ?", arg.ID).
 		Returning("id, user_id, title, is_public, ST_AsBinary(location) AS location, street_address, postal_code, state, country, start_date, end_date")
-
-	log.Println(b.String())
 
 	row := r.pool.QueryRow(ctx, b.String(), b.Args()...)
 	var i Party
@@ -299,21 +297,27 @@ func (r PartyRepository) GetPartiesByUser(ctx context.Context, arg GetPartiesByU
 	return items, nil
 }
 
-type GetPartiesInRadiusParams struct {
+type GeoSearchParams struct {
 	Lat    float32
 	Long   float32
 	Radius int32
-	Limit  uint64
+	Limit  int32
+	Offset int32
 }
 
-func (r PartyRepository) GetPartiesInRadius(ctx context.Context, arg GetPartiesInRadiusParams) ([]Party, error) {
+func (r PartyRepository) GeoSearch(ctx context.Context, arg GeoSearchParams) ([]Party, error) {
 	sqlf.SetDialect(sqlf.PostgreSQL)
 	b := sqlf.
 		Select(selectStmt).
 		From(TABLE_NAME).
-		Where("ST_DWithin(location,(ST_SetSRID(ST_MakePoint(?, ?), 4326),?)", arg.Long, arg.Lat, arg.Radius).
-		OrderBy("id desc").
-		Limit(arg.Limit)
+		Where("ST_DWithin(location,ST_MakePoint(?, ?)::geography, ?)", arg.Long, arg.Lat, arg.Radius)
+
+	if arg.Limit == 0 {
+		b = b.Limit(10)
+	} else {
+		b = b.Limit(arg.Limit)
+	}
+	b = b.Offset(arg.Offset)
 
 	rows, err := r.pool.Query(ctx, b.String(), b.Args()...)
 	if err != nil {

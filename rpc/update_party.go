@@ -6,6 +6,7 @@ import (
 	"github.com/clubo-app/packages/utils"
 	"github.com/clubo-app/party-service/dto"
 	pg "github.com/clubo-app/protobuf/party"
+	"github.com/paulmach/orb"
 	"github.com/segmentio/ksuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -24,8 +25,7 @@ func (s partyServer) UpdateParty(c context.Context, req *pg.UpdatePartyRequest) 
 		ID:            id.String(),
 		UserId:        req.RequesterId,
 		Title:         req.Title,
-		Lat:           req.Lat,
-		Long:          req.Long,
+		Location:      orb.Point{float64(req.Long), float64(req.Lat)},
 		StreetAddress: req.StreetAddress,
 		PostalCode:    req.PostalCode,
 		State:         req.State,

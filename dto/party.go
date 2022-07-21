@@ -2,6 +2,8 @@ package dto
 
 import (
 	"time"
+
+	"github.com/paulmach/orb"
 )
 
 type Party struct {
@@ -9,8 +11,7 @@ type Party struct {
 	UserId        string
 	Title         string
 	IsPublic      bool
-	Lat           float32
-	Long          float32
+	Location      orb.Point
 	StreetAddress string
 	PostalCode    string
 	State         string

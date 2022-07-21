@@ -15,6 +15,7 @@ type PartyService interface {
 	Get(ctx context.Context, pId string) (repository.Party, error)
 	GetMany(ctx context.Context, ids []string) ([]repository.Party, error)
 	GetByUser(ctx context.Context, uId string, limit, offset uint64) ([]repository.Party, error)
+	GeoSearch(ctx context.Context, params repository.GeoSearchParams) ([]repository.Party, error)
 }
 
 type partyService struct {
@@ -31,8 +32,7 @@ func (s partyService) Create(ctx context.Context, p dto.Party) (res repository.P
 		UserID:        p.UserId,
 		Title:         p.Title,
 		IsPublic:      p.IsPublic,
-		Lat:           p.Lat,
-		Long:          p.Long,
+		Location:      p.Location,
 		StreetAddress: p.StreetAddress,
 		PostalCode:    p.PostalCode,
 		State:         p.State,
@@ -51,8 +51,7 @@ func (s partyService) Update(ctx context.Context, p dto.Party) (res repository.P
 	res, err = s.r.UpdateParty(ctx, repository.UpdatePartyParams{
 		ID:            p.ID,
 		Title:         p.Title,
-		Lat:           p.Lat,
-		Long:          p.Long,
+		Location:      p.Location,
 		StreetAddress: p.StreetAddress,
 		PostalCode:    p.PostalCode,
 		State:         p.State,
@@ -106,6 +105,15 @@ func (s partyService) GetByUser(ctx context.Context, uId string, limit, offset u
 		Limit:  limit,
 		Offset: offset,
 	})
+	if err != nil {
+		return res, err
+	}
+
+	return res, nil
+}
+
+func (s partyService) GeoSearch(ctx context.Context, params repository.GeoSearchParams) ([]repository.Party, error) {
+	res, err := s.r.GeoSearch(ctx, params)
 	if err != nil {
 		return res, err
 	}

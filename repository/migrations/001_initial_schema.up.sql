@@ -15,5 +15,5 @@ CREATE TABLE parties (
 CREATE INDEX parties_by_user_id_idx ON parties (user_id, id);
 
 CREATE INDEX party_location_idx
-  ON parties
-  USING GIST (location);
+ON parties
+USING GIST( (location::geography) );
