@@ -247,9 +247,10 @@ func (r PartyRepository) GetManyParties(ctx context.Context, arg GetManyPartiesP
 }
 
 type GetPartiesByUserParams struct {
-	UserID string
-	Limit  uint64
-	Offset uint64
+	UserID   string
+	IsPublic bool
+	Limit    uint64
+	Offset   uint64
 }
 
 func (r PartyRepository) GetPartiesByUser(ctx context.Context, arg GetPartiesByUserParams) ([]Party, error) {
@@ -258,6 +259,7 @@ func (r PartyRepository) GetPartiesByUser(ctx context.Context, arg GetPartiesByU
 		Select(selectStmt).
 		From(TABLE_NAME).
 		Where("user_id = ?", arg.UserID).
+		Where("is_public = ?", arg.IsPublic).
 		OrderBy("id desc")
 	if arg.Limit == 0 {
 		b = b.Limit(10)
@@ -298,11 +300,12 @@ func (r PartyRepository) GetPartiesByUser(ctx context.Context, arg GetPartiesByU
 }
 
 type GeoSearchParams struct {
-	Lat    float32
-	Long   float32
-	Radius int32
-	Limit  int32
-	Offset int32
+	Lat      float32
+	Long     float32
+	Radius   int32
+	IsPublic bool
+	Limit    int32
+	Offset   int32
 }
 
 func (r PartyRepository) GeoSearch(ctx context.Context, arg GeoSearchParams) ([]Party, error) {
@@ -310,7 +313,8 @@ func (r PartyRepository) GeoSearch(ctx context.Context, arg GeoSearchParams) ([]
 	b := sqlf.
 		Select(selectStmt).
 		From(TABLE_NAME).
-		Where("ST_DWithin(location,ST_MakePoint(?, ?)::geography, ?)", arg.Long, arg.Lat, arg.Radius)
+		Where("ST_DWithin(location,ST_MakePoint(?, ?)::geography, ?)", arg.Long, arg.Lat, arg.Radius).
+		Where("is_public = ?", arg.IsPublic)
 
 	if arg.Limit == 0 {
 		b = b.Limit(10)

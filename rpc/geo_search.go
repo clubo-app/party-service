@@ -17,11 +17,12 @@ func (s partyServer) GeoSearch(ctx context.Context, req *party.GeoSearchRequest)
 	}
 
 	ps, err := s.ps.GeoSearch(ctx, repository.GeoSearchParams{
-		Lat:    req.Lat,
-		Long:   req.Long,
-		Radius: req.Radius,
-		Offset: req.Offset,
-		Limit:  req.Limit,
+		Lat:      req.Lat,
+		Long:     req.Long,
+		Radius:   req.Radius,
+		IsPublic: req.IsPublic,
+		Offset:   req.Offset,
+		Limit:    req.Limit,
 	})
 	if err != nil {
 		return nil, utils.HandleError(err)

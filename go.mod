@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/clubo-app/packages v0.0.0-20220527175458-6c8e7d7935c9
-	github.com/clubo-app/protobuf v0.0.0-20220721191618-cebd25de57fa
+	github.com/clubo-app/protobuf v0.0.0-20220724185455-e8363a551575
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/jackc/pgconn v1.12.1
 	github.com/jackc/pgx/v4 v4.16.1

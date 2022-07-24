@@ -14,7 +14,7 @@ type PartyService interface {
 	Delete(ctx context.Context, uId, pId string) error
 	Get(ctx context.Context, pId string) (repository.Party, error)
 	GetMany(ctx context.Context, ids []string) ([]repository.Party, error)
-	GetByUser(ctx context.Context, uId string, limit, offset uint64) ([]repository.Party, error)
+	GetByUser(ctx context.Context, params repository.GetPartiesByUserParams) ([]repository.Party, error)
 	GeoSearch(ctx context.Context, params repository.GeoSearchParams) ([]repository.Party, error)
 }
 
@@ -99,12 +99,8 @@ func (s partyService) GetMany(ctx context.Context, ids []string) (res []reposito
 	return res, nil
 }
 
-func (s partyService) GetByUser(ctx context.Context, uId string, limit, offset uint64) (res []repository.Party, err error) {
-	res, err = s.r.GetPartiesByUser(ctx, repository.GetPartiesByUserParams{
-		UserID: uId,
-		Limit:  limit,
-		Offset: offset,
-	})
+func (s partyService) GetByUser(ctx context.Context, params repository.GetPartiesByUserParams) (res []repository.Party, err error) {
+	res, err = s.r.GetPartiesByUser(ctx, params)
 	if err != nil {
 		return res, err
 	}

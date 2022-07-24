@@ -12,8 +12,8 @@ CREATE TABLE parties (
     end_date TIMESTAMP
 );
 
-CREATE INDEX parties_by_user_id_idx ON parties (user_id, id);
+CREATE INDEX parties_by_user_id_idx ON parties (user_id, is_public, id);
 
 CREATE INDEX party_location_idx
 ON parties
-USING GIST( (location::geography) );
+USING GIST( (location::geography), is_public );
